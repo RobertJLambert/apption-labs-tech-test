@@ -1,4 +1,3 @@
-//* Hello!  This is a tech test for Apption Labs and thesse are what you require.... for now...
 const express = require('express')
 const createError = require('http-errors')
 const path = require('path')
@@ -6,10 +5,6 @@ const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const bodyParser = require('body-parser')
 const multer = require('multer')
-const validator = require("email-validator");
-if (validator.validate("test@email.com") )
-  console.log("email true") // true
-
 const upload = multer()
 const port = 3000
 const app = express()
@@ -44,7 +39,7 @@ app.post('/save', function (req, res)
   res.render('save', { title: 'Tasty Treats', sub_title: 'Your local bakery' })
   // res.send('WE got ya')
 
-  //* Save file with contact info -- NOTE this require should be moved up top of this file with the others
+  //* Save file with contact info
   var fs = require('fs')
   
   fs.writeFile ('contact_msgs/save-' + Date.now(), JSON.stringify(req.body), function (err) 
