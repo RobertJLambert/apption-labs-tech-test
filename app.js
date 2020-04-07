@@ -6,9 +6,7 @@ const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const bodyParser = require('body-parser')
 const multer = require('multer')
-const validator = require("email-validator");
-if (validator.validate("test@email.com") )
-  console.log("email true") // true
+const validator = require("email-validator")
 
 const upload = multer()
 const port = 3000
@@ -41,11 +39,16 @@ app.use(express.static('public'))
 app.post('/save', function (req, res) 
 {
   console.log(req.body)
-  res.render('save', { title: 'Tasty Treats', sub_title: 'Your local bakery' })
+  res.render('save', { title: 'Tasty Treats' })
   // res.send('WE got ya')
 
-  //* Save file with contact info -- NOTE this require should be moved up top of this file with the others
+  //* Save file with contact info -- NOTE this require should be moved up top.. of this file.. with the others.. obvs
   var fs = require('fs')
+  
+  if (validator.validate(req.body.email) )
+    console.log(req.body.email + " = email true")
+  else
+    console.log(req.body.email + " = email No Goood")
   
   fs.writeFile ('contact_msgs/save-' + Date.now(), JSON.stringify(req.body), function (err) 
   {
