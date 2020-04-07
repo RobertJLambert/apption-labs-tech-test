@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const bodyParser = require('body-parser')
 const multer = require('multer')
-const validator = require("email-validator")
+const emailV = require("email-validator")
 
 const upload = multer()
 const port = 3000
@@ -25,38 +25,37 @@ app.use('/', indexRouter)
 app.use('/contact', contactRouter)
 // app.use('/save', saveRouter)
 
-//* for parsing application/json
+//* for parsing form data
 app.use(bodyParser.json())
-
-//* for parsing application/xwww-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }))
-
-//* for parsing multipart/form-dtaa
 app.use(upload.array())
 app.use(express.static('public'))
 
 //* Save contact form data 
 app.post('/save', function (req, res) 
 {
-  console.log(req.body)
-  res.render('save', { title: 'Tasty Treats' })
+  // console.log(req.body)
   // res.send('WE got ya')
 
-  //* Save file with contact info -- NOTE this require should be moved up top.. of this file.. with the others.. obvs
+  //* Save a file with the contact info -- NOTE this require should be moved up top.. of this file.. with the others.. obvs
   var fs = require('fs')
   
-  if (validator.validate(req.body.email) )
+  //* validate email
+  if (emailV.validate(req.body.email) )
+  {
     console.log(req.body.email + " = email true")
+  
+    fs.writeFile ('contact_msgs/save-' + Date.now(), JSON.stringify(req.body), function (err) 
+    {
+      if (err)
+        throw err
+  
+      res.render('save', { title: 'Tasty Treats' })
+      console.log('Saved message from : ' + req.body.namez)
+    })
+  }
   else
     console.log(req.body.email + " = email No Goood")
-  
-  fs.writeFile ('contact_msgs/save-' + Date.now(), JSON.stringify(req.body), function (err) 
-  {
-    if (err)
-        throw err
-
-    console.log('Saved message from : ' + req.body.namez)
-  })
 })
 
 app.use(logger('dev'))
