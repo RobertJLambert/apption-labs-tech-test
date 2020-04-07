@@ -7,6 +7,7 @@ const logger = require('morgan')
 const bodyParser = require('body-parser')
 const multer = require('multer')
 const emailV = require("email-validator")
+const fileSave = require('fs')
 
 const upload = multer()
 const port = 3000
@@ -15,6 +16,8 @@ const app = express()
 const indexRouter = require('./routes/index')
 const contactRouter = require('./routes/contact')
 // const saveRouter = require('./routes/save')
+
+var contact_msg_filename = 'contact_msgs/save-' + Date.now()
 
 //* view engine setup
 app.set('views', path.join(__dirname, 'views'))
@@ -34,28 +37,25 @@ app.use(express.static('public'))
 //* Save contact form data 
 app.post('/save', function (req, res) 
 {
-  // console.log(req.body)
-  // res.send('WE got ya')
-
-  //* Save a file with the contact info -- NOTE this require should be moved up top.. of this file.. with the others.. obvs
-  var fs = require('fs')
-  
   //* validate email
   if (emailV.validate(req.body.email) )
   {
     console.log(req.body.email + " = email true")
-  
-    fs.writeFile ('contact_msgs/save-' + Date.now(), JSON.stringify(req.body), function (err) 
+
+    //*Save a file with the contact info
+    fileSave.writeFile (contact_msg_filename, JSON.stringify(req.body), function (err) 
     {
       if (err)
         throw err
-  
+      
       res.render('save', { title: 'Tasty Treats' })
       console.log('Saved message from : ' + req.body.namez)
     })
   }
-  else
+  else {
+    res.redirect('/contact?emailError=1')
     console.log(req.body.email + " = email No Goood")
+  }
 })
 
 app.use(logger('dev'))
@@ -65,8 +65,8 @@ app.use(express.static(path.join(__dirname, 'public')))
 //* catch 404 and forward to error handler
 app.use(function(req, res, next) 
 {
-  next(createError(404));
-});  
+  next(createError(404))
+})
 
 //* error handler
 app.use(function(err, req, res, next) 
