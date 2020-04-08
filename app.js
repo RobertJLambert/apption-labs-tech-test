@@ -18,6 +18,7 @@ const indexRouter = require('./routes/index')
 const contactRouter = require('./routes/contact')
 // const saveRouter = require('./routes/save')
 
+var siteTitle = 'Tasty Treats'
 var contact_msg_filename = 'contact_msgs/save-' + Date.now()
 
 //* view engine setup
@@ -38,7 +39,8 @@ app.use(express.static('public'))
 //* Save contact form data 
 app.post('/save', [
     //* Sanatise input 
-    check('namez').isLength({ min: 3 }).trim().escape()
+    check('namez').isLength({ min: 3 }).trim().escape(), 
+    check('message').isLength({ max: 1000 }).trim().escape()
 ], (req, res) => 
 {
   //* validate email
@@ -46,18 +48,19 @@ app.post('/save', [
   {
     console.log(req.body.email + " = email true")
 
-
     //*Save a file with the contact info
     fileSave.writeFile (contact_msg_filename, JSON.stringify(req.body), function (err) 
     {
       if (err)
         throw err
       
-      res.render('save', { title: 'Tasty Treats' })
+      //- @todo title var should be global
+      res.render('save', { title: siteTitle, namez: req.body.namez })
       console.log('Saved message from : ' + req.body.namez)
     })
-  }
-  else {
+  } else 
+  {
+    //- @todo Display an error due to email not validating
     res.redirect('/contact?emailError=1')
     console.log(req.body.email + " = email No Good")
   }

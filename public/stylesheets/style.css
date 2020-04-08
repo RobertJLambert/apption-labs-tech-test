@@ -1,12 +1,6 @@
-/* body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-} */
-
-/* a {
-  color: #00B7FF;
-} */
-
-/* a.btn.btn-primary.btn-lg {
-  color: #fff;
-} */
+.follypot {
+  visibility: hidden;
+  display: none;
+  width: 0;
+  height: 0;
+}
