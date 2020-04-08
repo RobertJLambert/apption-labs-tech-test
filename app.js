@@ -7,6 +7,7 @@ const logger = require('morgan')
 const bodyParser = require('body-parser')
 const multer = require('multer')
 const emailV = require("email-validator")
+const { check, validationResult } = require('express-validator');
 const fileSave = require('fs')
 
 const upload = multer()
@@ -35,12 +36,16 @@ app.use(upload.array())
 app.use(express.static('public'))
 
 //* Save contact form data 
-app.post('/save', function (req, res) 
+app.post('/save', [
+    //* Sanatise input 
+    check('namez').isLength({ min: 3 }).trim().escape()
+], (req, res) => 
 {
   //* validate email
   if (emailV.validate(req.body.email) )
   {
     console.log(req.body.email + " = email true")
+
 
     //*Save a file with the contact info
     fileSave.writeFile (contact_msg_filename, JSON.stringify(req.body), function (err) 
@@ -54,7 +59,7 @@ app.post('/save', function (req, res)
   }
   else {
     res.redirect('/contact?emailError=1')
-    console.log(req.body.email + " = email No Goood")
+    console.log(req.body.email + " = email No Good")
   }
 })
 

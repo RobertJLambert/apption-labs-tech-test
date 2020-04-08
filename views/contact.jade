@@ -14,10 +14,17 @@ block content
       fieldset.form-group
         label(for='email') Email address
         input(name='email', type='email', placeholder='Please enter your email', value='myemaillss@a').form-control
+        //- @todo Display an error due to email not validating
+        //- var queryString = window.location.search
+        //- var urlParams = new URLSearchParams(queryString)
+        //- var emailError = urlParams.get('emailError')
+        //- if emailError
+        //-      p.error Please check your email for us.
         small.text-muted We'll never share your email with anyone else.
       fieldset.form-group
         label(for='message') Message
         textarea(name='message', rows='3').form-control hi
+      
       .checkbox
         label
           input(name='subscribe', type='checkbox')
