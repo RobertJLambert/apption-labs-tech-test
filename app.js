@@ -39,10 +39,17 @@ app.use(express.static('public'))
 //* Save contact form data 
 app.post('/save', [
     //* Sanatise input 
+    check('follypot').isEmpty(), 
     check('namez').isLength({ min: 3 }).trim().escape(), 
     check('message').isLength({ max: 1000 }).trim().escape()
 ], (req, res) => 
 {
+  // Finds the validation errors in this request and wraps them in an object with handy functions
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    // return res.status(422).json({ errors: errors.array() });
+  }
+
   //* validate email
   if (emailV.validate(req.body.email) )
   {
